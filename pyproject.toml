@@ -3,9 +3,10 @@ name = "langfuse-playground"
 version = "0.1.0"
 description = "Experimental playground for integrating Langfuse with multi-agent systems (Google ADK / A2A) to test tracing, input-output logging, and observability pipelines."
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 dependencies = [
     "langfuse>=3.8.1",
+    "python-dotenv>=1.2.1",
 ]
 
 [dependency-groups]

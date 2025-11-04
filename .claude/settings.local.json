@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(uv add:*)",
+      "Bash(source .venv/bin/activate)",
+      "Bash(python:*)",
+      "Bash(uv sync:*)"
     ],
     "deny": [],
     "ask": []
