@@ -1,10 +1,9 @@
 """Langfuse에서 프롬프트를 가져오는 예제 코드입니다.
 
-이 스크립트는 다음 기능을 제공합니다:
-- 최신 프로덕션 프롬프트 가져오기
-- 특정 버전의 프롬프트 가져오기
-- 특정 레이블의 프롬프트 가져오기
-- 프롬프트 변수 치환 (컴파일)
+langfuse.get_prompt()를 사용하여 다양한 방식으로 프롬프트를 가져옵니다:
+- Production 프롬프트 가져오기 (default)
+- 특정 label의 프롬프트 가져오기
+- 특정 version의 프롬프트 가져오기
 
 실행 방법:
     source .venv/bin/activate && python examples/load_prompts.py
@@ -17,7 +16,7 @@
 """
 
 import os
-from typing import Any, Dict, Optional
+from typing import Dict
 
 from dotenv import load_dotenv
 from langfuse import Langfuse
@@ -58,165 +57,68 @@ def initialize_langfuse() -> Langfuse:
     return Langfuse(**langfuse_kwargs)
 
 
-def fetch_prompt_latest(langfuse: Langfuse, prompt_name: str) -> Any:
-    """최신 프로덕션 프롬프트를 가져옵니다.
-
-    Args:
-        langfuse: Langfuse 클라이언트
-        prompt_name: 가져올 프롬프트의 이름
-
-    Returns:
-        프롬프트 클라이언트 객체
-    """
-    print(f"\n{'='*80}")
-    print(f"[예제 1] 최신 프로덕션 프롬프트 가져오기: {prompt_name}")
-    print(f"{'='*80}")
-
-    prompt = langfuse.get_prompt(name=prompt_name)
-
-    print(f"\n프롬프트 이름: {prompt.name}")
-    print(f"버전: {prompt.version}")
-    print(f"Config: {prompt.config}")
-    print(f"\n템플릿 내용:")
-    print(f"{'-'*80}")
-    print(prompt.prompt)
-    print(f"{'-'*80}")
-
-    return prompt
-
-
-def fetch_prompt_by_version(
-    langfuse: Langfuse, prompt_name: str, version: int
-) -> Any:
-    """특정 버전의 프롬프트를 가져옵니다.
-
-    Args:
-        langfuse: Langfuse 클라이언트
-        prompt_name: 가져올 프롬프트의 이름
-        version: 가져올 프롬프트의 버전 번호
-
-    Returns:
-        프롬프트 클라이언트 객체
-    """
-    print(f"\n{'='*80}")
-    print(f"[예제 2] 특정 버전 프롬프트 가져오기: {prompt_name} (버전 {version})")
-    print(f"{'='*80}")
-
-    prompt = langfuse.get_prompt(name=prompt_name, version=version)
-
-    print(f"\n프롬프트 이름: {prompt.name}")
-    print(f"버전: {prompt.version}")
-    print(f"Config: {prompt.config}")
-    print(f"\n템플릿 내용:")
-    print(f"{'-'*80}")
-    print(prompt.prompt)
-    print(f"{'-'*80}")
-
-    return prompt
-
-
-def fetch_prompt_by_label(
-    langfuse: Langfuse, prompt_name: str, label: str
-) -> Any:
-    """특정 레이블의 프롬프트를 가져옵니다.
-
-    Args:
-        langfuse: Langfuse 클라이언트
-        prompt_name: 가져올 프롬프트의 이름
-        label: 가져올 프롬프트의 레이블 (예: "production", "latest")
-
-    Returns:
-        프롬프트 클라이언트 객체
-    """
-    print(f"\n{'='*80}")
-    print(f"[예제 3] 특정 레이블 프롬프트 가져오기: {prompt_name} (레이블: {label})")
-    print(f"{'='*80}")
-
-    prompt = langfuse.get_prompt(name=prompt_name, label=label)
-
-    print(f"\n프롬프트 이름: {prompt.name}")
-    print(f"버전: {prompt.version}")
-    print(f"레이블: {label}")
-    print(f"Config: {prompt.config}")
-    print(f"\n템플릿 내용:")
-    print(f"{'-'*80}")
-    print(prompt.prompt)
-    print(f"{'-'*80}")
-
-    return prompt
-
-
-def compile_prompt_example(
-    prompt: Any, variables: Optional[Dict[str, Any]] = None
-) -> str:
-    """프롬프트 변수를 치환(컴파일)하는 예제입니다.
-
-    Args:
-        prompt: 프롬프트 클라이언트 객체
-        variables: 치환할 변수 딕셔너리
-
-    Returns:
-        변수가 치환된 프롬프트 문자열
-    """
-    print(f"\n{'='*80}")
-    print("[예제 4] 프롬프트 변수 치환 (컴파일)")
-    print(f"{'='*80}")
-
-    if variables is None:
-        variables = {}
-
-    print(f"\n입력 변수: {variables}")
-
-    compiled = prompt.compile(**variables)
-
-    print(f"\n치환 결과:")
-    print(f"{'-'*80}")
-    print(compiled)
-    print(f"{'-'*80}")
-
-    return compiled
-
-
 def main() -> None:
     """메인 함수입니다.
 
-    Langfuse 프롬프트 가져오기의 다양한 예제를 실행합니다.
+    langfuse.get_prompt()를 사용하여 다양한 방식으로 프롬프트를 가져오는 예제를 실행합니다.
     """
     try:
-        # 1. Langfuse 클라이언트 초기화
+        # Langfuse 클라이언트 초기화
         print("Langfuse 클라이언트 초기화 중...")
         langfuse = initialize_langfuse()
-        print("✓ Langfuse 클라이언트가 성공적으로 초기화되었습니다.")
+        print("✓ Langfuse 클라이언트가 성공적으로 초기화되었습니다.\n")
 
-        # 예제를 실행하기 위해서는 Langfuse 대시보드에서 프롬프트를 생성해야 합니다.
-        # 아래는 'example-prompt'라는 이름의 프롬프트가 존재한다고 가정한 예제입니다.
+        prompt_name = "langfuse-playground/example"
 
-        # 2. 최신 프로덕션 프롬프트 가져오기
-        # prompt = fetch_prompt_latest(langfuse, "example-prompt")
+        # 1. Production 프롬프트 가져오기 (default)
+        print("=" * 80)
+        print(f"[예제 1] Production 프롬프트 가져오기: {prompt_name}")
+        print("=" * 80)
 
-        # 3. 특정 버전 프롬프트 가져오기
-        # prompt_v1 = fetch_prompt_by_version(langfuse, "example-prompt", version=1)
+        prompt_production = langfuse.get_prompt(name=prompt_name)
 
-        # 4. 특정 레이블 프롬프트 가져오기
-        # prompt_production = fetch_prompt_by_label(
-        #     langfuse, "example-prompt", label="production"
-        # )
+        print(f"\n프롬프트 이름: {prompt_production.name}")
+        print(f"버전: {prompt_production.version}")
+        print(f"Config: {prompt_production.config}")
+        print("\n템플릿 내용:")
+        print("-" * 80)
+        print(prompt_production.prompt)
+        print("-" * 80)
 
-        # 5. 프롬프트 컴파일 (변수 치환)
-        # 프롬프트에 {{name}}과 같은 변수가 있다면 다음과 같이 치환할 수 있습니다:
-        # compile_prompt_example(prompt, {"name": "세레나", "topic": "AI"})
+        # 2. 특정 레이블의 프롬프트 가져오기
+        print("\n" + "=" * 80)
+        print(f"[예제 2] 레이블 지정 프롬프트 가져오기: {prompt_name} (label: 251105)")
+        print("=" * 80)
+
+        prompt_label = langfuse.get_prompt(name=prompt_name, label="251105")
+
+        print(f"\n프롬프트 이름: {prompt_label.name}")
+        print(f"버전: {prompt_label.version}")
+        print("레이블: 251105")
+        print(f"Config: {prompt_label.config}")
+        print("\n템플릿 내용:")
+        print("-" * 80)
+        print(prompt_label.prompt)
+        print("-" * 80)
+
+        # 3. 특정 버전의 프롬프트 가져오기
+        print("\n" + "=" * 80)
+        print(f"[예제 3] 버전 지정 프롬프트 가져오기: {prompt_name} (version: 1)")
+        print("=" * 80)
+
+        prompt_version = langfuse.get_prompt(name=prompt_name, version=1)
+
+        print(f"\n프롬프트 이름: {prompt_version.name}")
+        print(f"버전: {prompt_version.version}")
+        print(f"Config: {prompt_version.config}")
+        print("\n템플릿 내용:")
+        print("-" * 80)
+        print(prompt_version.prompt)
+        print("-" * 80)
 
         print("\n" + "=" * 80)
         print("예제 실행 완료!")
         print("=" * 80)
-        print("\n주의: 실제로 프롬프트를 가져오려면 Langfuse 대시보드에서")
-        print("프롬프트를 먼저 생성하고, 위의 주석 처리된 코드를 활성화하세요.")
-        print("\n프롬프트 생성 방법:")
-        print("1. https://cloud.langfuse.com 에 로그인")
-        print("2. 프로젝트 선택")
-        print("3. Prompts 메뉴에서 새 프롬프트 생성")
-        print("4. 프롬프트 이름을 'example-prompt'로 설정하거나")
-        print("   코드에서 프롬프트 이름을 실제 이름으로 변경")
 
     except ValueError as e:
         print(f"✗ 오류: {e}")
